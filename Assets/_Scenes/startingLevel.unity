@@ -5293,8 +5293,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d35f94e90b8ba24a84bf32fbf11e33e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reset: 27
-  quit: 0
+  reset: 114
+  quit: 27
 --- !u!4 &1929768351
 Transform:
   m_ObjectHideFlags: 0
