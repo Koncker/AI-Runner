@@ -13,6 +13,6 @@ public class moveCam : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        gameObject.transform.position = new Vector3(0, 2.35f, player.gameObject.transform.position.z - 4);   // DEPRECATED CODE -- DELETE LATER
+        gameObject.transform.position = new Vector3(0, 2.35f, player.gameObject.transform.position.z - 4);
     }
 }

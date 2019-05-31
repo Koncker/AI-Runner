@@ -6,6 +6,11 @@ public class playerController : MonoBehaviour {
 
     Rigidbody rb;
 
+    public rayController RayController;
+
+    private System.Random rnd = new System.Random();    // Random Number Generator
+    private int movementRNG = 0;           // default 0
+
     public KeyCode moveL;   // Movement KeyCode for Player Controller -- Left    -- SET TO A
     public KeyCode moveR;   // Movement KeyCode for Player Controller -- Right   -- SET TO D
     public KeyCode moveUp;  // Movement KeyCode for Player Controller -- Up      -- SET TO W or SPACE
@@ -15,23 +20,15 @@ public class playerController : MonoBehaviour {
     public static float forwVel = 7.0f;     // Setting for Z Axis Velocity -- Default value 7.0f
     public float maxVel = 20f;              // Maximum velocity permitted by the game -- Default value 10.0f
     float timeCounter = 0;                  // Use of timer in Update
-    public float jumpHeight = 250.0f;       // Default value 250.0f
+    public float jumpHeight = 350.0f;       // Default value 250.0f
     private bool isJumping = false;         // Boolean to check if player is Jumping -- Default false
 
     public static int score = 0;            // Score tracker
 
-    public int laneNum = 0;                 // Controls lane number for movement -- 0 = Center, -1 = Left, 1 = Right
+    public int laneNum = 0;          // Controls lane number for movement -- 0 = Center, -1 = Left, 1 = Right
     public bool controlLocked = false;      // Controls player input availability. false = Player can move.
 
-    public static bool maxMidSensor = false;
-    public static bool maxLeftSensor = false;
-    public static bool maxRightSensor = false;
-    public static bool midMidSensor = false;
-    public static bool midLeftSensor = false;
-    public static bool midRightSensor = false;
-    public static bool nearMidSensor = false;
-    public static bool nearLeftSensor = false;
-    public static bool nearRightSensor = false;
+    public bool AIMode;
 
 	// Use this for initialization
 	void Start () {
@@ -45,17 +42,77 @@ public class playerController : MonoBehaviour {
         //Movement to the Left - Ensures that player does not leave the map, and that they do not rapidfire the key.
         if(Input.GetKeyDown(moveL) && laneNum > -1 && controlLocked == false)
         {
-            moveRight();
+            moveLeft();
         }
         //Movement to the Right - Ensures that player does not leave the map, and that they do not rapidfire the key.
         if (Input.GetKeyDown(moveR) && laneNum < 1 && controlLocked == false)
         {
-            moveLeft();
+            moveRight();
         }
 
         if (Input.GetKeyDown(moveUp) && controlLocked == false) // Jump
         {
             jump();
+        }
+
+        if (AIMode)
+        {
+            if (RayController.targettedLethal && laneNum == 0 && !controlLocked) //targettedLethal == true)
+            {
+                if(RayController.frontLeftLethal || RayController.leftLethal || RayController.midLeftLethal)
+                {
+                    moveRight();
+                }
+                else if (RayController.frontRightLethal|| RayController.rightLethal || RayController.midRightLethal)
+                {
+                    moveLeft();
+                }
+                else
+                {
+                    movementRNG = rnd.Next(1, 3);
+                    switch (movementRNG)
+                    {
+                        case 1:
+                            moveRight();
+                            break;
+                        case 2:
+                            moveLeft();
+                            break;
+                    }
+                }
+            }
+
+            if (RayController.targettedLethal == true && laneNum == -1 && controlLocked == false/* && RayController.rightLethal == false*/)
+            {
+                if (/*RayController.rightLethal ||*/ RayController.midRightLethal || RayController.frontRightLethal)
+                {
+                    if(RayController.rightLethal)
+                    {
+                        jump();
+                        Debug.Break();
+                    }
+                }
+                else
+                {
+                    moveRight();
+                }
+            }
+
+            if (RayController.targettedLethal == true && laneNum == 1 && controlLocked == false /*&& RayController.leftLethal == false*/)
+            {
+                if(/*RayController.leftLethal ||*/ RayController.midLeftLethal || RayController.frontLeftLethal)
+                {
+                    if (RayController.leftLethal)
+                    {
+                        jump();
+                        Debug.Break();
+                    }
+                }
+                else
+                {
+                    moveLeft();
+                }
+            }
         }
 
         timeCounter += Time.deltaTime;
@@ -83,20 +140,20 @@ public class playerController : MonoBehaviour {
     }
 
     // Movement Function - Left
-    void moveLeft()
+    public void moveLeft()
     {
-        horizVel += 2.0f;               // Alters the horizontal velocity to 2.0f.
+        horizVel -= 2.0f;               // Alters the horizontal velocity to -2.0f.
         StartCoroutine(stopMoveX());    // Starts coroutine to ensure player cannot make another movement for 0.5s
-        laneNum += 1;                   // Ensures that the lane number increases to 1. This also ensures that the if condition can be met to move left.
+        laneNum -= 1;                   // Ensures that the lane number decreases to -1. This also ensures that the if condition can be met to move left.
         controlLocked = true;           // Locks control so player cannot move.
     }
 
     // Movement Function - Right
-    void moveRight()
+    public void moveRight()
     {
-        horizVel -= 2.0f;               // Alters the horizontal velocity to -2.0f.
+        horizVel += 2.0f;               // Alters the horizontal velocity to 2.0f.
         StartCoroutine(stopMoveX());    // Starts coroutine to ensure player cannot make another movement for 0.5s
-        laneNum -= 1;                   // Ensures that the lane number decreases to -1. This also ensures that the if condition can be met to move right.
+        laneNum += 1;                   // Ensures that the lane number increases to 1. This also ensures that the if condition can be met to move right.
         controlLocked = true;           // Locks control so player cannot move.
     }
 

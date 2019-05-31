@@ -18,12 +18,4 @@ public class sensorScript : MonoBehaviour {
     {
         gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, player.gameObject.transform.position.z + myDistanceToPlayer);
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (gameObject.tag == "maxCenterSensor")
-        {
-            playerController.maxMidSensor = true;
-        }
-    }
 }

@@ -28,6 +28,8 @@ public class mapController : MonoBehaviour {
     public Transform obstacleRight2;    // Right Lane Obstacle with Length 2
     public Transform obstacleRight3;    // Right Lane Obstacle with Length 3
 
+    private Transform[] obstacleArray;
+
 
     // Use this for initialization
     void Start () {
@@ -36,6 +38,16 @@ public class mapController : MonoBehaviour {
         Instantiate(bbPitCenter, new Vector3(0, 0, 44), bbPitCenter.rotation);
         Instantiate(bbNoPit, new Vector3(0, 0, 52), bbNoPit.rotation);
         Instantiate(bbPitCenter, new Vector3(0, 0, 60), bbPitCenter.rotation);
+        //obstacleArray = new Transform[]{
+        //                obstacleCenter1,
+        //                obstacleCenter2,
+        //                obstacleCenter3,
+        //                obstacleLeft1,
+        //                obstacleLeft2,
+        //                obstacleLeft3,
+        //                obstacleRight1,
+        //                obstacleRight2,
+        //                obstacleRight3};
     }
 
     private void OnTriggerEnter(Collider other)
@@ -52,7 +64,7 @@ public class mapController : MonoBehaviour {
             switch (sceneRNG)
             {
                 case 2:     // if the sceneRNG is set to 2 - Instantiates a block with a center pitfall
-                    Debug.Log("Instantiating Pit Center");
+                    //Debug.Log("Instantiating Pit Center");
                     Instantiate(bbPitCenter, new Vector3(0, 0, zScenePos), bbPitCenter.rotation);   // Instantiate center pit block
                     obstRNG = rnd.Next(1, 11);   // Generates a random number to create a random obstacle for the above instantiated map block.
 
@@ -82,7 +94,7 @@ public class mapController : MonoBehaviour {
                     break;
 
                 case 4:
-                    Debug.Log("Instantiating Pit Left");
+                    //Debug.Log("Instantiating Pit Left");
                     Instantiate(bbPitLeft, new Vector3(0, 0, zScenePos), bbPitLeft.rotation);       // Instantiate left pit block
                     obstRNG = rnd.Next(1, 11);  // Generates a random number to create a random obstacle for the above instantiated map block.
 
@@ -112,7 +124,7 @@ public class mapController : MonoBehaviour {
                     break;
 
                 case 6:
-                    Debug.Log("Instantiating Pit Right");
+                    //Debug.Log("Instantiating Pit Right");
                     Instantiate(bbPitRight, new Vector3(0, 0, zScenePos), bbPitRight.rotation);     // Instantiate right pit block
                     obstRNG = rnd.Next(1, 11);  // Generates a random number to create a random obstacle for the above instantiated map block.
 
@@ -142,7 +154,7 @@ public class mapController : MonoBehaviour {
                     break;
 
                 default:
-                    Debug.Log("Instantiating no Pit");
+                    //Debug.Log("Instantiating no Pit");
                     Instantiate(bbNoPit, new Vector3(0, 0, zScenePos), bbNoPit.rotation);           // Instantiate no pit block
                     obstRNG = rnd.Next(1, 11);  // Generates a random number to create a random obstacle for the above instantiated map block.
 
