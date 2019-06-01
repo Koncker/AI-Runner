@@ -14,7 +14,6 @@ Known Bugs:
 	- AI Mode is not flawless - Kills self if objects are not detected
 
 Change Log: 19.06.01
-	- Added RayCasts for better detection of objects
-	- Improved AI and Jumping mechanics
+	- Further Improved AI - Movement works better
 
 All rights are reserved to Vicky 'Koncker' Rajani and Pedro Assunção

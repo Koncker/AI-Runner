@@ -20,17 +20,17 @@ public class rayController : MonoBehaviour
     public bool farFrontRightLethal = false;
     private bool detection;
 
-    private Vector3 farFront = new Vector3(0.0f, -1.0f, 2.0f);
-    private Vector3 veryFarFront = new Vector3(0.0f, -1.0f, 4.0f);
-    private Vector3 nearFront = new Vector3(0.0f, -1.0f, 1.0f);
-    private Vector3 farFrontLeft = new Vector3(-1.0f, -4.0f, 10.0f);
-    private Vector3 farFrontRight = new Vector3(1.0f, -4.0f, 10.0f);
-    private Vector3 frontLeft = new Vector3(-1.0f, -4.0f, 6.0f);
-    private Vector3 frontRight = new Vector3(1.0f, -4.0f, 6.0f);
-    private Vector3 midLeft = new Vector3(-1.0f, -4.0f, 3f);
-    private Vector3 midRight = new Vector3(1.0f, -4.0f, 3f);
-    private Vector3 nearLeft = new Vector3(-1.0f, -4.0f, -0.25f);
-    private Vector3 nearRight = new Vector3(1.0f, -4.0f, -0.25f);
+    private Vector3 farFront = new Vector3(0.0f, -1.0f, 2.5f);
+    private Vector3 veryFarFront = new Vector3(0.0f, -1.0f, 6.0f);
+    private Vector3 nearFront = new Vector3(0.0f, -1.0f, 1.5f);
+    private Vector3 farFrontLeft = new Vector3(-1.0f, -2.0f, 10.0f);
+    private Vector3 farFrontRight = new Vector3(1.0f, -2.0f, 10.0f);
+    private Vector3 frontLeft = new Vector3(-1.0f, -2.0f, 6.0f);
+    private Vector3 frontRight = new Vector3(1.0f, -2.0f, 6.0f);
+    private Vector3 midLeft = new Vector3(-1.0f, -2.0f, 3f);
+    private Vector3 midRight = new Vector3(1.0f, -2.0f, 3f);
+    private Vector3 nearLeft = new Vector3(-1.0f, -2.0f, -0.25f);
+    private Vector3 nearRight = new Vector3(1.0f, -2.0f, -0.25f);
 
     // Use this for initialization
     void Start()

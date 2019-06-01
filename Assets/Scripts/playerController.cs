@@ -15,22 +15,22 @@ public class playerController : MonoBehaviour {
     public KeyCode moveR;   // Movement KeyCode for Player Controller -- Right   -- SET TO D
     public KeyCode moveUp;  // Movement KeyCode for Player Controller -- Up      -- SET TO W or SPACE
 
-    public float horizVel = 0;              // Setting for X Axis Velocity -- Default value 0.0f
     public static float verticalVel = 0f;   // Setting for Y Axis Velocity -- Default value 0.0f
     public static float forwVel = 7.0f;     // Setting for Z Axis Velocity -- Default value 7.0f
-    public float maxVel = 20f;              // Maximum velocity permitted by the game -- Default value 10.0f
-    float timeCounter = 0;                  // Use of timer in Update
-    public float jumpHeight = 350.0f;       // Default value 250.0f
+
+    private float horizVel = 0;             // Setting for X Axis Velocity -- Default value 0.0f
+    private float maxVel = 10f;             // Maximum velocity permitted by the game -- Default value 10.0f
+    private float timeCounter = 0;                  // Use of timer in Update
+    private float jumpHeight = 300.0f;      // Default value 300.0f
     private bool isJumping = false;         // Boolean to check if player is Jumping -- Default false
+    private bool controlLocked = false;     // Controls player input availability. false = Player can move.
 
-    public static int score = 0;            // Score tracker
-
-    public int laneNum = 0;          // Controls lane number for movement -- 0 = Center, -1 = Left, 1 = Right
-    public bool controlLocked = false;      // Controls player input availability. false = Player can move.
+    private int score = 0;                  // Score tracker
+    private int laneNum = 0;                // Controls lane number for movement -- 0 = Center, -1 = Left, 1 = Right
+    private int midLethalCounter;           // Checks when in mid lane how many obstacles exist around it
 
     public bool AIMode;
 
-    private int midLethalCounter;
 
 	// Use this for initialization
 	void Start () {
@@ -39,22 +39,26 @@ public class playerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        increaseScore();
         rb.velocity = new Vector3(horizVel, rb.velocity.y, forwVel);    // Controls the full movement of the player.
 
-        //Movement to the Left - Ensures that player does not leave the map, and that they do not rapidfire the key.
-        if(Input.GetKeyDown(moveL) && laneNum > -1 && controlLocked == false)
+        if (!AIMode)
         {
-            moveLeft();
-        }
-        //Movement to the Right - Ensures that player does not leave the map, and that they do not rapidfire the key.
-        if (Input.GetKeyDown(moveR) && laneNum < 1 && controlLocked == false)
-        {
-            moveRight();
-        }
-
-        if (Input.GetKeyDown(moveUp) && controlLocked == false) // Jump
-        {
-            jump();
+            //Movement to the Left - Ensures that player does not leave the map, and that they do not rapidfire the key.
+            if (Input.GetKeyDown(moveL) && laneNum > -1 && controlLocked == false)
+            {
+                moveLeft();
+            }
+            //Movement to the Right - Ensures that player does not leave the map, and that they do not rapidfire the key.
+            if (Input.GetKeyDown(moveR) && laneNum < 1 && controlLocked == false)
+            {
+                moveRight();
+            }
+            // Jump - Ensures that the player cannot rapidfire jump.
+            if (Input.GetKeyDown(moveUp) && controlLocked == false)
+            {
+                jump();
+            }
         }
 
         if (AIMode) // Behaviour Tree Setup
@@ -84,15 +88,21 @@ public class playerController : MonoBehaviour {
                     jump();
                 }
 
-                else if (RayController.frontLeftLethal || RayController.leftLethal || RayController.midLeftLethal || RayController.farFrontLeftLethal)
+                else if (RayController.frontLeftLethal || RayController.leftLethal || RayController.midLeftLethal /*|| RayController.farFrontLeftLethal*/)
                 {
-                    moveRight();
+                    if (RayController.leftLethal && (RayController.frontRightLethal || RayController.rightLethal || RayController.midRightLethal))
+                        moveLeft();
+                    else
+                        moveRight();
                     //Debug.Break();
                 }
                 // Checks to see if object is detected anywhere on the right, and moves left
-                else if (RayController.frontRightLethal|| RayController.rightLethal || RayController.midRightLethal || RayController.farFrontRightLethal)
+                else if (RayController.frontRightLethal || RayController.rightLethal || RayController.midRightLethal /*|| RayController.farFrontRightLethal*/)
                 {
-                    moveLeft();
+                    if (RayController.rightLethal && (RayController.frontLeftLethal || RayController.leftLethal || RayController.midLeftLethal))
+                        moveRight();
+                    else
+                        moveLeft();
                     //Debug.Break();
                 }
                 // If no objects are found, moves either left or right.
@@ -113,13 +123,13 @@ public class playerController : MonoBehaviour {
             }
 
             // Left lane decision making
-            if (RayController.targettedLethal == true && laneNum == -1 && controlLocked == false/* && RayController.rightLethal == false*/)
+            if (RayController.targettedLethal && laneNum == -1 && !controlLocked)
             {
                 // Checks to see if object is detected in front right, or mid right
                 if (RayController.midRightLethal || RayController.frontRightLethal)
                 {
                     // If an object is also detected directly to the right, jump
-                    if(RayController.rightLethal && !RayController.veryFarFrontLethal)
+                    if((RayController.rightLethal || RayController.midRightLethal) && !RayController.veryFarFrontLethal)
                     {
                         jump();
                         //Debug.Break();
@@ -129,17 +139,18 @@ public class playerController : MonoBehaviour {
                 else
                 {
                     moveRight();
+                    //Debug.Break();
                 }
             }
 
             // Right lane decision making
-            if (RayController.targettedLethal == true && laneNum == 1 && controlLocked == false /*&& RayController.leftLethal == false*/)
+            if (RayController.targettedLethal && laneNum == 1 && !controlLocked)
             {
                 // Checks to see if object is detected in front left, or mid left
                 if (RayController.midLeftLethal || RayController.frontLeftLethal)
                 {
                     // If an object is also detected directly to the left, jump
-                    if (RayController.leftLethal && !RayController.veryFarFrontLethal)
+                    if ((RayController.leftLethal || RayController.midLeftLethal) && !RayController.veryFarFrontLethal)
                     {
                         jump();
                         //Debug.Break();
@@ -149,6 +160,7 @@ public class playerController : MonoBehaviour {
                 else
                 {
                     moveLeft();
+                    //Debug.Break();
                 }
             }
         }
@@ -210,6 +222,7 @@ public class playerController : MonoBehaviour {
         // Check to see if player is hitting a lethal object. All lethal objects must use the "Lethal" tag.
         if (other.gameObject.tag == "lethal")   
         {
+            Debug.Break();
             Destroy(gameObject);    // Destroys player
             score = 0;              // Resets the score
             GMScript.resetGame();   // Reloads the game
@@ -246,7 +259,7 @@ public class playerController : MonoBehaviour {
     //Here we stop the horizontal movement of the player after 0.5 seconds.
     IEnumerator stopMoveX()
     {
-        yield return new WaitForSeconds(.5f);   // Wait 0.5s
+        yield return new WaitForSeconds(0.5f);   // Wait 0.5s
         horizVel = 0;                           // Reset horizontalVel to 0.
         if (laneNum == -1)                      // Check if player is in left lane
         {
@@ -257,5 +270,12 @@ public class playerController : MonoBehaviour {
             rb.position = new Vector3(1f, rb.position.y, rb.position.z);    // Force position to center of right lane.
         }
         controlLocked = false;                  // Removes player control Lock.
+    }
+
+    IEnumerator increaseScore()
+    {
+        yield return new WaitForSeconds(1f);
+        score += 1;
+        print(score);
     }
 }
