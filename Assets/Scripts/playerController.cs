@@ -30,6 +30,8 @@ public class playerController : MonoBehaviour {
 
     public bool AIMode;
 
+    private int midLethalCounter;
+
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody>();
@@ -55,21 +57,48 @@ public class playerController : MonoBehaviour {
             jump();
         }
 
-        if (AIMode)
+        if (AIMode) // Behaviour Tree Setup
         {
+            // Direct collision decision
+            if (RayController.directFrontLethal && !controlLocked)
+            {
+                jump();
+            }
+
+            // Center lane decision making
             if (RayController.targettedLethal && laneNum == 0 && !controlLocked) //targettedLethal == true)
             {
-                if(RayController.frontLeftLethal || RayController.leftLethal || RayController.midLeftLethal)
+                // Checks to see if object is detected anywhere on the left, and moves right
+                if(RayController.midLeftLethal)
+                {
+                    midLethalCounter += 1;
+                }
+
+                if (RayController.midRightLethal)
+                {
+                    midLethalCounter += 1;
+                }
+
+                if (midLethalCounter == 2)
+                {
+                    jump();
+                }
+
+                else if (RayController.frontLeftLethal || RayController.leftLethal || RayController.midLeftLethal || RayController.farFrontLeftLethal)
                 {
                     moveRight();
+                    //Debug.Break();
                 }
-                else if (RayController.frontRightLethal|| RayController.rightLethal || RayController.midRightLethal)
+                // Checks to see if object is detected anywhere on the right, and moves left
+                else if (RayController.frontRightLethal|| RayController.rightLethal || RayController.midRightLethal || RayController.farFrontRightLethal)
                 {
                     moveLeft();
+                    //Debug.Break();
                 }
+                // If no objects are found, moves either left or right.
                 else
                 {
-                    movementRNG = rnd.Next(1, 3);
+                    movementRNG = rnd.Next(1, 3);   // Random between 1 (inclusive) and 3 (exclusive), i.e. 1-2
                     switch (movementRNG)
                     {
                         case 1:
@@ -80,34 +109,43 @@ public class playerController : MonoBehaviour {
                             break;
                     }
                 }
+                midLethalCounter = 0;
             }
 
+            // Left lane decision making
             if (RayController.targettedLethal == true && laneNum == -1 && controlLocked == false/* && RayController.rightLethal == false*/)
             {
-                if (/*RayController.rightLethal ||*/ RayController.midRightLethal || RayController.frontRightLethal)
+                // Checks to see if object is detected in front right, or mid right
+                if (RayController.midRightLethal || RayController.frontRightLethal)
                 {
-                    if(RayController.rightLethal)
+                    // If an object is also detected directly to the right, jump
+                    if(RayController.rightLethal && !RayController.veryFarFrontLethal)
                     {
                         jump();
-                        Debug.Break();
+                        //Debug.Break();
                     }
                 }
+                // otherwise simply move right, given that no object is detected immediately to the right
                 else
                 {
                     moveRight();
                 }
             }
 
+            // Right lane decision making
             if (RayController.targettedLethal == true && laneNum == 1 && controlLocked == false /*&& RayController.leftLethal == false*/)
             {
-                if(/*RayController.leftLethal ||*/ RayController.midLeftLethal || RayController.frontLeftLethal)
+                // Checks to see if object is detected in front left, or mid left
+                if (RayController.midLeftLethal || RayController.frontLeftLethal)
                 {
-                    if (RayController.leftLethal)
+                    // If an object is also detected directly to the left, jump
+                    if (RayController.leftLethal && !RayController.veryFarFrontLethal)
                     {
                         jump();
-                        Debug.Break();
+                        //Debug.Break();
                     }
                 }
+                // otherwise simply move left, given that no object is detected immediately to the right
                 else
                 {
                     moveLeft();

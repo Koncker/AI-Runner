@@ -153,7 +153,7 @@ MonoBehaviour:
   jumpHeight: 300
   laneNum: 0
   controlLocked: 0
-  AIMode: 0
+  AIMode: 1
 --- !u!54 &45545616
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2788,12 +2788,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 45545614}
   targettedLethal: 0
+  veryFarFrontLethal: 0
+  directFrontLethal: 0
   leftLethal: 0
   rightLethal: 0
   frontLeftLethal: 0
   frontRightLethal: 0
   midLeftLethal: 0
   midRightLethal: 0
+  farFrontLeftLethal: 0
+  farFrontRightLethal: 0
 --- !u!4 &1021445566
 Transform:
   m_ObjectHideFlags: 0
