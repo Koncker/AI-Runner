@@ -11,7 +11,7 @@
 These are the assets and builds created for Artificial Intelliegence in Games in FCUL for Masters in Informatics
 
 Known Bugs:
-	- AI Mode is not flawless - Kills self if objects are not detected
+	- AI Mode is not flawless - Moves into an object if there are too many objects surrounding it.
 
 Change Log: 19.06.01
 	- Further Improved AI - Movement works better
