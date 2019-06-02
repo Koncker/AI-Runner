@@ -88,7 +88,7 @@ public class playerController : MonoBehaviour {
                     jump();
                 }
 
-                else if (RayController.frontLeftLethal || RayController.leftLethal || RayController.midLeftLethal /*|| RayController.farFrontLeftLethal*/)
+                else if (RayController.frontLeftLethal || RayController.leftLethal || RayController.midLeftLethal)
                 {
                     if (RayController.leftLethal && (RayController.frontRightLethal || RayController.rightLethal || RayController.midRightLethal))
                         moveLeft();
@@ -97,7 +97,7 @@ public class playerController : MonoBehaviour {
                     //Debug.Break();
                 }
                 // Checks to see if object is detected anywhere on the right, and moves left
-                else if (RayController.frontRightLethal || RayController.rightLethal || RayController.midRightLethal /*|| RayController.farFrontRightLethal*/)
+                else if (RayController.frontRightLethal || RayController.rightLethal || RayController.midRightLethal)
                 {
                     if (RayController.rightLethal && (RayController.frontLeftLethal || RayController.leftLethal || RayController.midLeftLethal))
                         moveRight();
