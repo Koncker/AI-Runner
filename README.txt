@@ -13,7 +13,9 @@ These are the assets and builds created for Artificial Intelliegence in Games in
 Known Bugs:
 	- AI Mode is not flawless - Moves into an object if there are too many objects surrounding it.
 
-Change Log: 19.06.02
-	- Added ground textures, and pit fall textures
+Change Log: 19.06.06
+	- Added Buttons to generate obstacles
+	- Added timer to see how long AI lasts
+	- Improved AI
 
 All rights are reserved to Vicky 'Koncker' Rajani and Pedro Assunção
