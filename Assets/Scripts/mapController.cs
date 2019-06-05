@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+using UnityEngine.UI;
 
 public class mapController : MonoBehaviour {
 
-    public float zScenePos = 68;        // default 68
+    private float zScenePos = 62;        // default 62
     private int sceneRNG = 0;           // default 0
     private int obstRNG = 0;            // default 0
     private int colCounter = 0;         // default 0
@@ -28,26 +28,36 @@ public class mapController : MonoBehaviour {
     public Transform obstacleRight2;    // Right Lane Obstacle with Length 2
     public Transform obstacleRight3;    // Right Lane Obstacle with Length 3
 
+    public Button leftObstacle, centerObstacle, rightObstacle;      // Buttons to generate an object in specific lane
+
     private Transform[] obstacleArray;
 
 
     // Use this for initialization
     void Start () {
         // Instantiates the intial 4 Blocks. Distances default = 36, 44, 52, 60
-        Instantiate(bbNoPit, new Vector3(0, 0, 36), bbNoPit.rotation);
-        Instantiate(bbPitCenter, new Vector3(0, 0, 44), bbPitCenter.rotation);
-        Instantiate(bbNoPit, new Vector3(0, 0, 52), bbNoPit.rotation);
-        Instantiate(bbPitCenter, new Vector3(0, 0, 60), bbPitCenter.rotation);
-        //obstacleArray = new Transform[]{
-        //                obstacleCenter1,
-        //                obstacleCenter2,
-        //                obstacleCenter3,
-        //                obstacleLeft1,
-        //                obstacleLeft2,
-        //                obstacleLeft3,
-        //                obstacleRight1,
-        //                obstacleRight2,
-        //                obstacleRight3};
+        Instantiate(bbNoPit, new Vector3(0, 0, 8), bbNoPit.rotation);
+        Instantiate(bbPitCenter, new Vector3(0, 0, 16), bbPitCenter.rotation);
+        Instantiate(bbNoPit, new Vector3(0, 0, 24), bbNoPit.rotation);
+        Instantiate(bbNoPit, new Vector3(0, 0, 32), bbNoPit.rotation);
+        Instantiate(bbPitCenter, new Vector3(0, 0, 40), bbPitCenter.rotation);
+        Instantiate(bbNoPit, new Vector3(0, 0, 48), bbNoPit.rotation);
+        Instantiate(bbPitCenter, new Vector3(0, 0, 56), bbPitCenter.rotation);
+    }
+
+    public void generateCenterObstacle()
+    {
+        Instantiate(obstacleCenter2, new Vector3(obstacleCenter2.position.x, 1, zScenePos - 40f), obstacleCenter2.rotation);
+    }
+
+    public void generateLeftObstacle()
+    {
+        Instantiate(obstacleLeft2, new Vector3(obstacleLeft2.position.x, 1, zScenePos - 40f), obstacleLeft2.rotation);
+    }
+
+    public void generateRightObstacle()
+    {
+        Instantiate(obstacleRight2, new Vector3(obstacleRight2.position.x, 1, zScenePos - 40f), obstacleRight2.rotation);
     }
 
     private void OnTriggerEnter(Collider other)

@@ -1,12 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class playerController : MonoBehaviour {
 
     Rigidbody rb;
 
-    public rayController RayController;
+    // Variables to keep tack of Score
+    public static float maxScore;
+    public Text scoreText;
+    public Text maxScoreText;
+    private float timer;
+
+    public rayController RayController;     // Access to RayController Script, i.e. sensors
 
     private System.Random rnd = new System.Random();    // Random Number Generator
     private int movementRNG = 0;           // default 0
@@ -25,7 +32,6 @@ public class playerController : MonoBehaviour {
     private bool isJumping = false;         // Boolean to check if player is Jumping -- Default false
     private bool controlLocked = false;     // Controls player input availability. false = Player can move.
 
-    private int score = 0;                  // Score tracker
     private int laneNum = 0;                // Controls lane number for movement -- 0 = Center, -1 = Left, 1 = Right
     private int midLethalCounter;           // Checks when in mid lane how many obstacles exist around it
 
@@ -39,7 +45,10 @@ public class playerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        increaseScore();
+        timer += Time.deltaTime;
+        scoreText.text = "Time Survived: " + timer.ToString();
+        maxScoreText.text = "Max Time Survived: " + maxScore.ToString();
+
         rb.velocity = new Vector3(horizVel, rb.velocity.y, forwVel);    // Controls the full movement of the player.
 
         if (!AIMode)
@@ -224,7 +233,10 @@ public class playerController : MonoBehaviour {
         {
             Debug.Break();
             Destroy(gameObject);    // Destroys player
-            score = 0;              // Resets the score
+            if (timer > maxScore)
+            {
+                maxScore = timer;
+            }
             GMScript.resetGame();   // Reloads the game
         }
 
@@ -270,12 +282,10 @@ public class playerController : MonoBehaviour {
             rb.position = new Vector3(1f, rb.position.y, rb.position.z);    // Force position to center of right lane.
         }
         controlLocked = false;                  // Removes player control Lock.
-    }
-
-    IEnumerator increaseScore()
-    {
-        yield return new WaitForSeconds(1f);
-        score += 1;
-        print(score);
+        if (laneNum == 0)                       // Check if player is in right lane
+        {
+            rb.position = new Vector3(0f, rb.position.y, rb.position.z);    // Force position to center of right lane.
+        }
+        controlLocked = false;                  // Removes player control Lock.
     }
 }
